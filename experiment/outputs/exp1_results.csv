@@ -1,0 +1,11 @@
+Method,Test Market,Mean PnL,CVaR(10%),CVaR(30%),Mean(q_T),Var(q_T)
+Fixed Spread,U1,3.5,-0.0,0.09,-0.04,1.25
+Avellaneda-Stoikov,U1,7.43,2.06,3.75,-0.08,4.81
+single-R2,U1,4.61,-0.02,0.97,0.05,2.08
+single-R4,U1,4.64,-0.02,0.93,-0.09,2.16
+Multi-PPO,U1,5.06,0.12,1.36,0.13,2.44
+Fixed Spread,U2,1.21,-0.48,-0.16,-0.04,0.65
+Avellaneda-Stoikov,U2,2.44,-1.14,-0.03,0.07,1.95
+single-R2,U2,1.54,-0.86,-0.29,-0.03,1.14
+single-R4,U2,1.5,-0.68,-0.23,-0.01,0.98
+Multi-PPO,U2,1.71,-0.45,-0.15,0.11,1.16

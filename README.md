@@ -1,51 +1,62 @@
-# mbt_gym
-`mbt_gym` is a module which provides a suite of gym environments for training reinforcement learning (RL) agents to solve model-based high-frequency trading problems such as market-making and optimal execution. The module is set up in an extensible way to allow the combination of different aspects of different models. It supports highly efficient implementations of vectorized environments to allow faster training of RL agents.
+# Robust Reinforcement Learning for Market Making under Regime Uncertainty: Numerical Evidence from Multi-Regime Training
 
-It includes gym environments for popular analytically tractable market making models, as well as more complex models that prove difficult to solve analytically.
+This repository provides `mbt_gym` (model-based limit order book Gym environments) and the accompanying numerical study showing that multi-regime training improves out-of-sample return-side robustness under unseen market regimes.
 
-The associated paper can be found at https://dl.acm.org/doi/pdf/10.1145/3604237.3626873 and https://arxiv.org/abs/2209.07823.
+## mbt_gym
 
-## Contributions are welcome!
-If you wish to contribute to this repository, please read the details of how to do so in the 
-[CONTRIBUTING.md](./CONTRIBUTING.md) file in the root directory of the repository. For ideas on code that you could 
-contribute, please look at the [roadmap](./roadmap.md).  
+`mbt_gym` provides a suite of Gym environments for training reinforcement learning (RL) agents on model-based high-frequency trading problems, such as market making and optimal execution. The environments are composable and optimized for efficient (vectorized) rollout generation.
 
-## Using mbt_gym with Docker
+This repository also includes a numerical study on *robust RL under market regime uncertainty*, where the trading environment parameters change between training and testing regimes.
 
-To use the `mbt_gym` package from within a docker container (see [instructions on how to install docker](https://docs.docker.com/engine/install/ubuntu/))
-, first change directory into the
-docker subdirectory using `cd docker` and then follow the instructions below.
+## Regime Uncertainty (Numerical Study)
 
-### Building
+In the experiments, the market is parameterized by a regime vector:
 
-To build the container:
+`m = (sigma, A, k)`
 
+- `sigma`: mid-price volatility
+- `A`: baseline order-arrival intensity (liquidity)
+- `k`: fill probability decay sensitivity w.r.t. quote distance
+
+Two training settings are compared:
+
+- **Single-regime PPO**: PPO trained on a single seen regime (e.g., `R2`)
+- **Multi-regime PPO**: PPO trained with episode-level random regime sampling over a set of seen regimes (`R1`-`R6`)
+
+Unseen test regimes:
+
+- `U1`: interpolation-type unseen market
+- `U2`: stress-type unseen market
+
+Evaluation emphasizes return-side robustness using metrics such as `Mean PnL`, `CVaR10%`, and `CVaR30%`, while also reporting terminal inventory diagnostics.
+
+## Repository Layout
+
+- `mbt_gym/`: environment implementations, dynamics, rewards, wrappers, and agents.
+- `experiment/`: notebooks and scripts to reproduce the numerical experiments (see `Template_Experiments.ipynb`).
+- `requirements.txt`: dependencies for running the experiments (exported from the `RL2` conda environment).
+
+## Setup
+
+```bash
+pip install -r requirements.txt
 ```
-sh build_image.sh
-```
 
-### Running
+## Reproduce the Experiments
 
-Run the start container script (mounting ../, therefore mounting `mbt_gym`), and specify a port for jupyter notebook:
+1. Open `experiment/Template_Experiments.ipynb`
+2. Locate `REGIME_PARAMS` in the notebook to view the regime grid (`R1`-`R6`, `U1`, `U2`)
+3. Run the training/evaluation cells and compare baselines:
+   - Fixed Spread
+   - Avellaneda-Stoikov
+   - Single-regime PPO (e.g., trained only on `R2`)
+   - Multi-regime PPO (uniform sampling across `R1`-`R6`)
 
-```
-sh start_container.sh 8877
-```
+## Citing `mbt_gym`
 
-(Note: if you wish to add gpus to container, just add ```--gpus device=0``` to ```start_container.sh``` to use one gpu 
-or ```--gpus all``` to add all gpus available.)
+When using `mbt_gym`, please cite our [ACM ICAIF 2023 paper](https://arxiv.org/abs/2209.07823) with:
 
-To work in the container via shell:
-
-```
-sh exec_mbt_gym.sh
-```
-
-## Citing mbt_gym
-
-When using `mbt_gym`, please cite our [ACM ICAIF 2023 paper](https://arxiv.org/abs/2209.07823) by using the following
-BibTeX entry:
-```
+```bibtex
 @inproceedings{JeromeSSH23,
   author       = {Joseph Jerome and
                   Leandro S{\'{a}}nchez{-}Betancourt and
@@ -62,3 +73,7 @@ BibTeX entry:
   note         = {arXiv preprint arXiv:2209.07823}
 }
 ```
+
+For the robust regime-uncertainty study motivating the `experiment/` notebooks, see:
+`Robust Reinforcement Learning for Market Making under Regime Uncertainty: Numerical Evidence from Multi-Regime Training`.
+Code (as referenced in the manuscript): https://github.com/tang-lin0203/MultiRegimeInMbtGym

@@ -1,3 +1,18 @@
+# Keep ONLY:
+# - experiment/
+# - mbt_gym/
+# - README.md
+# - requirements.txt
+#
+# Everything else is ignored by default.
+*
+!.gitignore
+!README.md
+!requirements.txt
+!experiment/
+!experiment/**
+!mbt_gym/
+!mbt_gym/**
 .DS_Store
 
 # Update notebooks manually, if necessary
